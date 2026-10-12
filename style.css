@@ -248,7 +248,7 @@ input[type="text"]:focus, textarea:focus {
 .form-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* ---------- プレビュー ---------- */
-.preview-pane { position: sticky; top: 84px; }
+.preview-pane { position: static; top: 88px; }
 .preview-bar {
   display: flex;
   align-items: center;
