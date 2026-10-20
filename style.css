@@ -105,6 +105,13 @@ a { color: var(--brand); }
   padding: 22px 22px 24px;
 }
 .pane-head h2 { font-size: 19px; margin-bottom: 6px; }
+.page-title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
 .hint { color: var(--ink-2); font-size: 13.5px; margin: 0 0 16px; }
 
 .notice {
