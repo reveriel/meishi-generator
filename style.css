@@ -498,3 +498,27 @@ input[type="text"]:focus, textarea:focus {
   .sheet-grid.is-portrait .sheet-cell { width: 55mm; height: 91mm; }
   .sheet-cell svg { display: block; width: 100%; height: 100%; }
 }
+
+/* ===== 【PR】アフィリエイト（名刺・印刷） ===== */
+.pr-affiliate { max-width: 1180px; margin: 0 auto 26px; padding: 0 20px; }
+.pr-box {
+  position: relative;
+  padding: 20px 22px 18px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.pr-badge {
+  display: inline-block; margin: 0 0 10px; padding: 2px 8px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
+  color: var(--brand-dark); background: var(--brand-soft);
+  border: 1px solid #d3e0f5; border-radius: 999px;
+}
+.pr-title { font-size: 16px; margin: 0 0 8px; color: var(--ink); }
+.pr-lead { margin: 0 0 14px; font-size: 13.5px; line-height: 1.75; color: var(--ink-2); }
+.pr-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.pr-note { margin: 12px 0 0; font-size: 11.5px; line-height: 1.6; color: var(--ink-3); }
+.pr-pixel { position: absolute; left: -9999px; }
+@media (max-width: 720px) { .pr-affiliate { padding: 0 14px; } }
+@media print { .pr-affiliate { display: none !important; } }
