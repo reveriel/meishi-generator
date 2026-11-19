@@ -739,6 +739,33 @@
     sheet.innerHTML = '<div class="sheet-grid' + (portrait ? ' is-portrait' : '') + '">' + cells.join('') + '</div>';
   }
 
+
+  /* ===================================================================
+     印刷サイズの確認（100mm のものさしを印刷してプリンターの倍率を確認する）
+     =================================================================== */
+  function printCalibration() {
+    var sheet = document.querySelector('.print-sheet');
+    if (!sheet) return;
+    var backup = sheet.innerHTML;
+    sheet.innerHTML =
+      '<div class="cal-wrap">' +
+      '<h2>印刷サイズの確認</h2>' +
+      '<p>下の線がちょうど <strong>100mm</strong> になるように印刷してください。ものさしで実測してください。</p>' +
+      '<div class="cal-ruler"><span class="cal-tick">0</span><span class="cal-mid">50mm</span><span class="cal-end">100mm</span></div>' +
+      '<p class="cal-note">ずれている場合は、印刷ダイアログの「拡大/縮小」を「100%（実際のサイズ）」に設定してから、もう一度印刷してください。</p>' +
+      '</div>';
+    var done = false;
+    function restore() {
+      if (done) return;
+      done = true;
+      sheet.innerHTML = backup;
+      window.removeEventListener('afterprint', restore);
+    }
+    window.addEventListener('afterprint', restore);
+    window.print();
+    setTimeout(restore, 1500);
+  }
+
   function doPrint() {
     buildSheet();
     window.print();
@@ -1137,6 +1164,7 @@
     var png = byId('pngBtn'); if (png) png.addEventListener('click', exportPng);
     var sb = byId('sampleBtn'); if (sb) sb.addEventListener('click', fillSample);
     var rb = byId('resetBtn'); if (rb) rb.addEventListener('click', resetForm);
+    var cb = byId('calBtn'); if (cb) cb.addEventListener('click', printCalibration);
     var lb = byId('langBtn');
     if (lb) lb.addEventListener('click', function () { applyI18n(state.lang === 'ja' ? 'zh' : 'ja'); });
 
