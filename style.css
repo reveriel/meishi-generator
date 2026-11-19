@@ -522,3 +522,8 @@ input[type="text"]:focus, textarea:focus {
 .pr-pixel { position: absolute; left: -9999px; }
 @media (max-width: 720px) { .pr-affiliate { padding: 0 14px; } }
 @media print { .pr-affiliate { display: none !important; } }
+
+/* ===== モバイル：入力欄のフォントを16pxに（iOSの自動ズーム防止） ===== */
+@media (max-width: 720px) {
+  input, select, textarea { font-size: 16px !important; }
+}
