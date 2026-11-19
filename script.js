@@ -1011,6 +1011,61 @@
     if (dot) dot.style.background = state.customColor;
   }
 
+
+  /* ===================================================================
+     10.5 前回入力の保存・復元（この端末内のみ）
+     =================================================================== */
+  var PROFILE_KEY = 'meishi.profile.v1';
+  var PROFILE_FIELDS = ['name','kana','company','dept','title','zip','address','tel','fax','email','url'];
+  var profileStore = (function () {
+    try {
+      var k = '__ms_test__';
+      window.localStorage.setItem(k, '1');
+      window.localStorage.removeItem(k);
+      return window.localStorage;
+    } catch (e) { return null; }
+  })();
+  var profileTimer = null;
+
+  function queueSaveProfile() {
+    if (!profileStore) return;
+    if (profileTimer) clearTimeout(profileTimer);
+    profileTimer = setTimeout(function () {
+      var data = {};
+      PROFILE_FIELDS.forEach(function (id) { var el = byId(id); if (el) data[id] = el.value; });
+      try { profileStore.setItem(PROFILE_KEY, JSON.stringify({ v: 1, savedAt: new Date().toISOString(), fields: data })); } catch (e) {}
+    }, 500);
+  }
+
+  function restoreProfile() {
+    if (!profileStore) return false;
+    var raw, parsed;
+    try { raw = profileStore.getItem(PROFILE_KEY); } catch (e) { return false; }
+    if (!raw) return false;
+    try { parsed = JSON.parse(raw); } catch (e) { return false; }
+    if (!parsed || parsed.v !== 1 || !parsed.fields) return false;
+    var filled = 0;
+    PROFILE_FIELDS.forEach(function (id) {
+      var el = byId(id);
+      if (!el || !parsed.fields[id]) return;
+      if (!el.value) { el.value = parsed.fields[id]; filled++; }
+    });
+    return filled > 0;
+  }
+
+  function showProfileHint() {
+    var form = byId('cardForm');
+    if (!form || !form.parentNode) return;
+    var bar = document.createElement('div');
+    bar.className = 'profile-hint no-print';
+    bar.innerHTML = '前回入力した情報を復元しました。<button type="button" class="profile-delete" id="profileDelete">保存データを削除</button>';
+    form.parentNode.insertBefore(bar, form);
+    byId('profileDelete').addEventListener('click', function () {
+      try { profileStore.removeItem(PROFILE_KEY); } catch (e) {}
+      if (bar.parentNode) bar.parentNode.removeChild(bar);
+    });
+  }
+
   /* ===================================================================
      11. 初期化
      =================================================================== */
@@ -1107,7 +1162,15 @@
 
     applyI18n('ja');
     syncControls();
+
+    if (restoreProfile()) showProfileHint();
     render();
+
+    var cf = byId('cardForm');
+    if (cf) {
+      cf.addEventListener('input', queueSaveProfile);
+      cf.addEventListener('change', queueSaveProfile);
+    }
   }
 
   if (document.readyState === 'loading') {
